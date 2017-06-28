@@ -1,0 +1,8 @@
+.open 'C:\Path\To\Plex Media Server\Plug-in Support\Databases\com.plexapp.plugins.library.db'
+.output 'VirtualLib.bat' 
+SELECT 'mkdir "D:\Path\To\Media\VirtualLib\' || replace(tag,'VL-','') || '"' || x'0a' || 'mklink /J "D:\Path\To\Media\VirtualLib\' || replace(tag,'VL-','') ||'\' || replace(replace(file, rtrim(file, replace(file, '\', '' ) ), ''), '.' || replace(file, rtrim(file, replace(file, '.', '' ) ), ''),'') || '" "' || "J:\Media\" || substr(replace(file, replace(file, rtrim(file, replace(file, '\', '' ) ), ''),''),10) || '"'
+FROM media_parts 
+JOIN media_items ON media_parts.media_item_id=media_items.id
+JOIN taggings ON media_items.metadata_item_id=taggings.metadata_item_id
+JOIN tags ON taggings.tag_id=tags.id
+WHERE tag LIKE 'VL-%' ORDER BY tag, file;
